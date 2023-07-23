@@ -10,3 +10,9 @@ function pallwell_university_files()
     wp_enqueue_style('pallwell_extra_style', get_theme_file_uri('/css/index.css'));
 }
 add_action('wp_enqueue_scripts', 'pallwell_university_files');
+
+function pallwell_university_features()
+{
+    add_theme_support('title');
+}
+add_action('after_theme_setup', 'pallwell_university_features');
