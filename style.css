@@ -13,3 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: pallwell
 Tags: one-column, custom-colors, custom-menu, custom-logo, editor-style, featured-images, full-site-editing, block-patterns, rtl-language-support, sticky-post, threaded-comments, accessibility-ready
 */
+
+body {
+    color: green;
+}
