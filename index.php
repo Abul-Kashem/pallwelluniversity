@@ -11,9 +11,10 @@
   </div>
 </div>
 
-<?php while (have_posts()) : the_post() ?>
+<div class="container container--narrow page-section">
 
-  <div class="container container--narrow page-section">
+  <?php while (have_posts()) : the_post() ?>
+
     <div class="post-item">
       <h2 class="headline headline--medium headline--post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 
@@ -26,9 +27,32 @@
         <p><a href="<?php the_permalink(); ?>">Continue Reading &raquo;</a></p>
       </div>
     </div>
+
+  <?php endwhile; ?>
+
+
+  <!-- <?php echo paginate_links(); ?> -->
+
+  <div class="container">
+    <!-- Your Loop Content Here -->
+
+    <!-- Pagination -->
+    <div class="custom-pagination-wrapper">
+      <?php
+      $pagination_args = array(
+        'prev_text' => '&laquo; Previous',
+        'next_text' => 'Next &raquo;',
+      );
+      echo paginate_links($pagination_args);
+      ?>
+    </div>
   </div>
 
-<?php endwhile; ?>
+
+
+</div>
+
+
 
 
 

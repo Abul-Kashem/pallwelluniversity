@@ -42,7 +42,9 @@ get_header();
             <p class="t-center no-margin"><a href="#" class="btn btn--blue">View All Events</a></p>
         </div>
     </div>
-    <div class="full-width-split__two">
+
+
+    <!-- <div class="full-width-split__two">
         <div class="full-width-split__inner">
             <h2 class="headline headline--small-plus t-center">From Our Blogs</h2>
 
@@ -69,7 +71,58 @@ get_header();
 
             <p class="t-center no-margin"><a href="#" class="btn btn--yellow">View All Blog Posts</a></p>
         </div>
+    </div> -->
+
+
+
+    <div class="full-width-split__two">
+        <div class="full-width-split__inner">
+            <h2 class="headline headline--small-plus t-center">From Our Blogs</h2>
+
+            <?php
+
+            $home_page_posts = new WP_Query(array(
+                'posts_per_page' => 2
+            ));
+
+            if ($home_page_posts->have_posts()) :
+                while ($home_page_posts->have_posts()) :
+                    $home_page_posts->the_post();
+            ?>
+
+                    <div class="event-summary">
+                        <a class="event-summary__date event-summary__date--beige t-center" href="<?php the_permalink(); ?>">
+                            <span class="event-summary__month"><?php the_time('M'); ?></span>
+                            <span class="event-summary__day"><?php the_time('d'); ?></span>
+                        </a>
+                        <div class="event-summary__content">
+                            <h5 class="event-summary__title headline headline--tiny">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h5>
+                            <p>
+                                <?php echo wp_trim_words(get_the_content(), 20); ?>
+                                <a href="<?php the_permalink(); ?>" class="nu gray">Read more</a>
+                            </p>
+                        </div>
+                    </div>
+
+            <?php
+                endwhile;
+                wp_reset_postdata();
+            else :
+                echo 'No data found';
+            endif;
+
+            ?>
+
+            <p class="t-center no-margin"><a href="<?php echo site_url('/blog'); ?>" class="btn btn--yellow">View All Blog Posts</a></p>
+
+        </div>
     </div>
+
+
+
+
 </div>
 
 <div class="hero-slider">
