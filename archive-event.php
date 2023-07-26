@@ -17,8 +17,13 @@
 
         <div class="event-summary">
             <a class="event-summary__date t-center" href="#">
-                <span class="event-summary__month">Apr</span>
-                <span class="event-summary__day">02</span>
+                <span class="event-summary__month">
+                    <?php
+                    $event_date = new DateTime(get_field('event_date'));
+                    echo $event_date->format('M');
+                    ?>
+                </span>
+                <span class="event-summary__day"><?php echo $event_date->format('d'); ?></span>
             </a>
             <div class="event-summary__content">
                 <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h5>
@@ -51,7 +56,8 @@
             ?>
         </div>
     </div>
-
+    <hr class="section-break">
+    <p>Looking for a recap of past events <a href="<?php echo site_url('/past-events') ?>">Check out the past events here!</a></p>
 </div>
 
 <?php get_footer(); ?>

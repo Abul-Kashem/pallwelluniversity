@@ -38,3 +38,26 @@ function custom_paginate_links($output)
 add_filter('paginate_links', 'custom_paginate_links');
 
 
+function pallwell_university_adjust_queries($query)
+{
+    // Only modify the main query on the frontend for 'event' post type archive
+    if (!is_admin() && $query->is_main_query() && is_post_type_archive('event')) {
+        // Get the current date in the format 'Ymd' (e.g., '20230726')
+        $today = date('Ymd');
+
+        // Modify the main query parameters
+        $meta_query = array(
+            'key' => 'event_date',
+            'value' => $today,
+            'compare' => '>=',
+            'type' => 'numeric'
+        );
+
+        $query->set('meta_query', array($meta_query));
+        $query->set('meta_key', 'event_date');
+        $query->set('orderby', 'meta_value_num');
+        $query->set('order', 'ASC');
+    }
+}
+// Hook the function into the 'pre_get_posts' action
+add_action('pre_get_posts', 'pallwell_university_adjust_queries');
