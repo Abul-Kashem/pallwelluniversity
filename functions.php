@@ -27,7 +27,8 @@ function pallwell_university_features()
 add_action('after_setup_theme', 'pallwell_university_features');
 
 // Custom pagination function
-function custom_paginate_links($output) {
+function custom_paginate_links($output)
+{
     // Replace the default HTML classes with custom classes
     $output = str_replace('page-numbers', 'custom-pagination', $output);
     $output = str_replace('prev', 'custom-pagination-prev', $output);
@@ -35,4 +36,5 @@ function custom_paginate_links($output) {
     return $output;
 }
 add_filter('paginate_links', 'custom_paginate_links');
+
 
