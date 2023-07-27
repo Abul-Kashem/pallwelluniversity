@@ -40,6 +40,13 @@ add_filter('paginate_links', 'custom_paginate_links');
 
 function pallwell_university_adjust_queries($query)
 {
+    if (!is_admin() and is_post_type_archive('program') and $query->is_main_query()) {
+        $query->set('orderby', 'title');
+        $query->set('order', 'ASC');
+        $query->set('posts_per_page', -1);
+    }
+
+
     // Only modify the main query on the frontend for 'event' post type archive
     if (!is_admin() && $query->is_main_query() && is_post_type_archive('event')) {
         // Get the current date in the format 'Ymd' (e.g., '20230726')
