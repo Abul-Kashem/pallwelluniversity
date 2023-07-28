@@ -23,6 +23,11 @@ function pallwell_university_features()
     //     'secondary-menu' => esc_html__('Secondary Menu', 'pallwell'),
     //     // Add more menu locations here if needed
     // ));
+
+    add_theme_support('post-thumbnails');
+    add_image_size('professor-landscape', 400, 260, true);
+    add_image_size('professor-portrait', 480, 650, true);
+    add_image_size('page-banner', 1500, 350, true);
 }
 add_action('after_setup_theme', 'pallwell_university_features');
 

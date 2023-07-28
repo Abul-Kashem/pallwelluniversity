@@ -34,6 +34,60 @@
             <?php the_content(); ?>
         </div>
 
+        <!-- Professor Loop -->
+
+        <?php
+
+        $today = date('Ymd');
+        $professor_id = get_the_ID();
+
+        $related_professor = new WP_Query(array(
+            'posts_per_page' => -1,
+            'post_type' => 'professor',
+            'orderby' => 'title',
+            'order' => 'ASC',
+            'meta_query' =>
+            array(
+                array(
+                    'key' => 'related_programs',
+                    'compare' => 'LIKE',
+                    'value' => '"' . $professor_id . '"',
+                )
+            )
+        ));
+
+        if ($related_professor->have_posts()) :
+
+            echo '<hr class="section-break">';
+            echo '<h2 class="headline headline--medium">' . get_the_title() . ' Professors </h2>';
+
+            echo '<ul class="professor-cards">';
+            while ($related_professor->have_posts()) :
+                $related_professor->the_post();
+
+        ?>
+
+               
+                <li class="professor-card__list-item">
+                    <a class="professor-card" href="<?php the_permalink(); ?>">
+                        <img class="professor-card__image" src="<?php the_post_thumbnail_url('professor-landscape') ?>">
+                        <span class="professor-card__name"><?php the_title(); ?></span>
+                    </a>
+                </li>
+
+
+        <?php
+            endwhile;
+            echo '</ul>';
+            wp_reset_postdata();
+        else :
+            echo '<hr class="section-break">';
+        endif;
+        ?>
+
+
+        <!-- Upcoming Event Post Loop -->
+
         <?php
 
         $today = date('Ymd');
@@ -61,13 +115,6 @@
                 )
             )
         ));
-
-
-        // echo '<pre>';
-        // print_r($home_page_events);
-        // echo '</pre>';
-
-
 
         if ($home_page_events->have_posts()) :
 
