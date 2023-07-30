@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php get_header();
+
+page_banner(array(
+  'title' => get_the_archive_title(),
+  'subtitle' => get_the_archive_description()
+));
+?>
 
 
 <div class="page-banner">
