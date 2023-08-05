@@ -8,6 +8,10 @@ function pallwell_university_files()
     wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     wp_enqueue_style('pallwell_main_style', get_theme_file_uri('/css/style-index.css'));
     wp_enqueue_style('pallwell_extra_style', get_theme_file_uri('/css/index.css'));
+
+    wp_localize_script('pallwell-university-js', 'universityData', array(
+        'root_url' => get_site_url()
+    ));
 }
 add_action('wp_enqueue_scripts', 'pallwell_university_files');
 
