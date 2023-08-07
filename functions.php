@@ -1,5 +1,19 @@
 <?php
 
+require get_theme_file_path('/inc/search-route.php');
+
+
+function pallwell_university_custom_rest()
+{
+    register_rest_field('post', 'author_name', array(
+        'get_callback' => function () {
+            return get_the_author();
+        }
+    ));
+}
+add_action('rest_api_init', 'pallwell_university_custom_rest');
+
+
 function pallwell_university_files()
 {
     // wp_enqueue_script('pallwell-university-js', get_theme_file_uri('js/index.js'), array('jquery'), '1.0', true);
