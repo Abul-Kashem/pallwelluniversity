@@ -149,3 +149,25 @@ function no_subs_admin_bar()
         show_admin_bar(false);
     }
 }
+
+// Customize login screen
+add_filter('login_headerurl', 'our_header_url');
+function our_header_url()
+{
+    return esc_url(site_url('/'));
+}
+
+add_action('login_enqueue_scripts', 'our_login_css');
+function our_login_css()
+{
+    wp_enqueue_style('custom-google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
+    wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+    wp_enqueue_style('pallwell_main_style', get_theme_file_uri('/css/style-index.css'));
+    wp_enqueue_style('pallwell_extra_style', get_theme_file_uri('/css/index.css'));
+}
+
+add_filter('login_headertitle', 'our_login_title');
+function our_login_title()
+{
+    return get_bloginfo('name');
+}
