@@ -125,3 +125,27 @@ function page_banner($args = NULL)
 <?php
 
 }
+
+
+// Redirect subscriber accounts out of admin and onto homepage
+
+add_action('admin_init', 'redirects_subs_to_frontend');
+function redirects_subs_to_frontend()
+{
+    $our_current_user = wp_get_current_user();
+
+    if (count($our_current_user->roles) == 1 and $our_current_user->roles[0] == 'subscriber') {
+        wp_redirect(site_url('/'));
+        exit;
+    }
+}
+
+add_action('wp_loaded', 'no_subs_admin_bar');
+function no_subs_admin_bar()
+{
+    $our_current_user = wp_get_current_user();
+
+    if (count($our_current_user->roles) == 1 and $our_current_user->roles[0] == 'subscriber') {
+        show_admin_bar(false);
+    }
+}
