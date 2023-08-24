@@ -13,9 +13,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/MobileMenu */ "./src/modules/MobileMenu.js");
 /* harmony import */ var _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/HeroSlider */ "./src/modules/HeroSlider.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
+/* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -24,6 +26,7 @@ __webpack_require__.r(__webpack_exports__);
 var mobileMenu = new _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__["default"]();
 var heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]();
 const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_3__["default"]();
+const myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__["default"]();
 
 /***/ }),
 
@@ -94,6 +97,154 @@ class MobileMenu {
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MobileMenu);
+
+/***/ }),
+
+/***/ "./src/modules/MyNotes.js":
+/*!********************************!*\
+  !*** ./src/modules/MyNotes.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+class MyNotes {
+  constructor() {
+    this.events();
+  }
+  events() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#my-notes").on("click", ".delete-note", this.deleteNote);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#my-notes').on("click", ".edit-note", this.editNote.bind(this));
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#my-notes').on("click", ".update-note", this.updateNote.bind(this));
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('.submit-note').on("click", this.createNote.bind(this));
+  }
+
+  // method start here
+
+  createNote(e) {
+    var our_new_note = {
+      "title": jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title").val(),
+      "content": jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-body").val(),
+      "status": "publish"
+    };
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/wp/v2/note/",
+      type: "POST",
+      data: our_new_note,
+      success: response => {
+        // this.makeNewNote();
+
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title, .new-note-body").val("");
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(`
+                    <li data-id="${response.id}">
+                        <input class="note-title-field" value="${response.title.raw}">
+                        <span class="edit-note"><i class="fa fa-pencil"></i>Edit</span>
+                        <span class="delete-note"><i class="fa fa-pencil"></i>Delete</span>
+                        <textarea class="note-body-field">${response.content.raw}</textarea>
+                        <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+                    </li>
+                `).prependTo("#my-notes").hide().slideDown();
+        console.log("congrats");
+        console.log(response);
+      },
+      error: response => {
+        console.log("Sorry!");
+        console.log(response);
+      }
+    });
+  }
+  makeNewNote(response) {
+    console.log(response);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title, .new-note-body").val("");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(`
+            <li data-id="${response.id}">
+                <input class="note-title-field" value="${response.title.raw}">
+                <span class="edit-note"><i class="fa fa-pencil"></i>Edit</span>
+                <span class="delete-note"><i class="fa fa-pencil"></i>Delete</span>
+                <textarea class="note-body-field">${response.content.raw}</textarea>
+                <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+            </li>
+        `).prependTo("#my-notes").hide().slideDown();
+  }
+
+  // edit method
+  editNote(e) {
+    var this_note = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).parents('li');
+    if (this_note.data('state') == 'editable') {
+      this.makeNoteReadOnly(this_note);
+    } else {
+      this.makeNoteEditable(this_note);
+    }
+  }
+  makeNoteEditable(this_note) {
+    this_note.find(".edit-note").html('<i class="fa fa-times" aria-hidden="true"></i>Cancel');
+    this_note.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
+    this_note.find(".update-note").addClass("update-note--visible");
+    this_note.data("state", "editable");
+  }
+  makeNoteReadOnly(this_note) {
+    this_note.find(".edit-note").html('<i class="fa fa-pencil" aria-hidden="true"></i>Edit');
+    this_note.find(".note-title-field, .note-body-field").attr("readonly", "readonly").removeClass("note-active-field");
+    this_note.find(".update-note").removeClass("update-note--visible");
+    this_note.data("state", "cancel");
+  }
+
+  // update method
+  updateNote(e) {
+    var this_note = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).parents('li');
+    var our_update_note = {
+      "title": this_note.find(".note-title-field").val(),
+      "content": this_note.find(".note-body-field").val()
+    };
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/wp/v2/note/" + this_note.data('id'),
+      type: "POST",
+      data: our_update_note,
+      success: response => {
+        this.makeNoteReadOnly(this_note);
+        console.log("congrats");
+        console.log(response);
+      },
+      error: response => {
+        console.log("Sorry!");
+        console.log(response);
+      }
+    });
+  }
+
+  // delete method
+  deleteNote(e) {
+    var this_note = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).parents('li');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/wp/v2/note/" + this_note.data('id'),
+      type: "DELETE",
+      success: response => {
+        this_note.slideUp();
+        console.log("congrats");
+        console.log(response);
+      },
+      error: response => {
+        console.log("Sorry!");
+        console.log(response);
+      }
+    });
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MyNotes);
 
 /***/ }),
 
