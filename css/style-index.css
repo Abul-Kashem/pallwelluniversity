@@ -463,7 +463,7 @@ li {
 .like-box .fa-heart-o {
     transition: all 0.35s ease-out;
     position: absolute;
-    left: 10px;
+    left: 15px;
 }
 
 .like-box .fa-heart {
